@@ -17,7 +17,7 @@ The GET endpoint is designed for use when few or no filters are needed. If filte
 
 `GET https://cja.adobe.io/auditlogs`
 
-Hitting this endpoint with no query string parameters will return the last 1000 audit log records in descending order.
+Hitting this endpoint with no query string parameters will return the last 1000 audit log records in descending order. To filter the audit log records, please reference the list of available query string parameters.
 
 
 ### Query String Parameters
@@ -31,18 +31,200 @@ Hitting this endpoint with no query string parameters will return the last 1000 
 | userType | Enum | The type of user. | IMS, OKTA |
 | userId | String | The id of the user. | -- |
 | userEmail | String | The email address of the user. | User defined |
-| description | String | The description of the audit log. | -- |
+| description | String | The description of the audit log. | User defined |
 | pageSize | Integer | Number of results per page. If left null, the default size will be set to 100. | 10 |
 | pageNumber | Integer | Page number (base 0 - first page is "0") | 0 |
 
+### Example : Get audit logs with no filters
+
+Request:
+`GET https://cja.adobe.io/auditlogs`
+
+Response:
+
+```
+{
+  "content": [
+    {
+      "id": "61573795d9409a491f1a9604",
+      "dateCreated": "2021-10-01T16:30:13.377+00:00",
+      "action": "CREATE",
+      "description": "Creating scheduled job: e1efbf6c-d483-408e-b033-3045e594b656",
+      "imsOrgId": "4E9432245BC7C44B0A494037@AdobeOrg",
+      "user": {
+        "id": "434F42A85501C8190A4C86DE@AdobeID",
+        "idType": "IMS",
+        "name": null,
+        "email": null
+      },
+      "component": {
+        "id": "e1efbf6c-d483-408e-b033-3045e594b656",
+        "idType": "SCHEDULED_PROJECT",
+        "name": ""
+      }
+    },
+    {
+      "id": "615735e8d9409a491f1a9603",
+      "dateCreated": "2021-10-01T16:23:04.821+00:00",
+      "action": "DELETE",
+      "description": "Deleting scheduled job: 7baaf2f8-209a-4886-9619-30f3054884ce",
+      "imsOrgId": "4E9432245BC7C44B0A494037@AdobeOrg",
+      "user": {
+        "id": "06257AF96137B9990A494018@fd6f6f286137b98d494230.e",
+        "idType": "IMS",
+        "name": null,
+        "email": null
+      },
+      "component": {
+        "id": "7baaf2f8-209a-4886-9619-30f3054884ce",
+        "idType": "SCHEDULED_PROJECT",
+        "name": "EOW reporting"
+      }
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 2,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": false,
+  "totalElements": 1946,
+  "totalPages": 973,
+  "size": 2,
+  "number": 0,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "numberOfElements": 2,
+  "first": true,
+  "empty": false
+}
+```
+
+### Example : Get audit logs with filters applied
+
+Request:
+
+```
+?startDate=2021-08-01T00%3A00%3A00-07&endDate=2021-09-30T00%3A00%3A00-07&action=CREATE&action=EDIT&action=DELETE&component=SCHEDULED_PROJECT&userType=IMS&description=job&pageSize=2
+```
+Response:
+```
+{
+  "content": [
+    {
+      "id": "615559925e0e8a7da2152d86",
+      "dateCreated": "2021-09-30T06:30:42.968+00:00",
+      "action": "CREATE",
+      "description": "Creating scheduled job: ce4e1239-ab7b-471c-9d6a-14934c9d5ea4",
+      "imsOrgId": "4E9432245BC7C44B0A494037@AdobeOrg",
+      "user": {
+        "id": "434F42A85501C8190A4C86DE@AdobeID",
+        "idType": "IMS",
+        "name": null,
+        "email": null
+      },
+      "component": {
+        "id": "ce4e1239-ab7b-471c-9d6a-14934c9d5ea4",
+        "idType": "SCHEDULED_PROJECT",
+        "name": ""
+      }
+    },
+    {
+      "id": "615556df5e0e8a7da2152d85",
+      "dateCreated": "2021-09-30T06:19:11.145+00:00",
+      "action": "EDIT",
+      "description": "Updating scheduled job: 2dab1331-4844-4f82-94ff-9721ec47830c",
+      "imsOrgId": "4E9432245BC7C44B0A494037@AdobeOrg",
+      "user": {
+        "id": "039D6F286137B99D0A49401D@fd6f6f286137b98d494230.e",
+        "idType": "IMS",
+        "name": null,
+        "email": null
+      },
+      "component": {
+        "id": "2dab1331-4844-4f82-94ff-9721ec47830c",
+        "idType": "SCHEDULED_PROJECT",
+        "name": ""
+      }
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 2,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": false,
+  "totalElements": 1246,
+  "totalPages": 623,
+  "size": 2,
+  "number": 0,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "numberOfElements": 2,
+  "first": true,
+  "empty": false
+}
+```
+
 ## Search Audit Logs
 
-If you need to retrieve a list of audit logs using 'OR' criteria, you will want to utilize the POST /auditlogs/search endpoint.
+If you need to retrieve a list of audit logs using 'OR' criteria, you will want to utilize the POST /auditlogs/search endpoint. These lists can be used as a guide for the available ENUM values for the associated key.
+
+
+### fieldType
+  * COMPONENT
+  * COMPONENT_ID
+  * USER
+  * USER_ID
+  * USER_EMAIL
+  * BEGIN_DATE_RANGE
+  * END_DATE_RANGE
+  * ACTION
+  * DESCRIPTION
+
+#### Notes
+
+_If 'BEGIN_DATE_RANGE' is set as a fieldType, 'END_DATE_RANGE' must also be set. These fieldTypes must use 'EQUALS' as their 'operator'._
+
+### operator
+
+* EQUALS
+* NOT_EQUALS
+* CONTAINS
+* IN
+
+### fieldOperator
+
+* AND
+* OR
+
+
+## POST Example 1
 
 `POST https://cja.adobe.io/auditlogs/search`
 
 
-An example POST request body:
+#### Show me audit logs where the component is 'FILTER' or 'CALCULATED_METRIC', the 'DESCRIPTION' contains the string 'created', AND the 'USER_EMAIL' contains EITHER 'jane' or 'john'.
 
 ```
 {
@@ -93,29 +275,55 @@ An example POST request body:
 }
 ```
 
-### fieldType
-  * COMPONENT
-  * COMPONENT_ID
-  * USER
-  * USER_ID
-  * USER_EMAIL
-  * BEGIN_DATE_RANGE
-  * END_DATE_RANGE
-  * ACTION
-  * DESCRIPTION
+## POST Example 2
 
-#### Notes
+#### Show me audit logs between June 1st and October 1st where the 'ACTION' was either 'CREATE' OR 'EDIT' OR the 'DESCRIPTION' contained the string 'job' or 'test'. The response will only include logs between those dates but the other criteria will be filtered using 'OR' logic.
 
-_If 'BEGIN_DATE_RANGE' is set as a fieldType, 'END_DATE_RANGE' must also be set. These fieldTypes must use 'EQUALS' as their 'operator'._
-
-### operator
-
-* EQUALS
-* NOT_EQUALS
-* CONTAINS
-* IN
-
-### fieldOperator
-
-* AND
-* OR
+```
+{
+  "criteria": {
+    "fieldOperator": "AND",
+    "fields": [
+      {
+        "fieldType": "BEGIN_DATE_RANGE",
+        "value": [
+          "2021-06-01T00:00:00-07"
+        ],
+        "operator": "EQUALS"
+      },
+      {
+        "fieldType": "END_DATE_RANGE",
+        "value": [
+          "2021-10-01T00:00:00-07"
+        ],
+        "operator": "EQUALS"
+      }
+    ],
+    "subCriteriaOperator": "AND",
+    "subCriteria": {
+      "fieldOperator": "OR",
+      "fields": [
+        {
+          "fieldType": "ACTION",
+          "value": [
+            "CREATE",
+            "EDIT"
+          ],
+          "operator": "IN"
+        },
+          {
+          "fieldType": "DESCRIPTION",
+          "value": [
+            "job",
+            "test"
+          ],
+          "operator": "CONTAINS"
+        }
+      ],
+      "subCriteriaOperator": null,
+      "subCriteria": null
+    }
+  },
+  "pageSize": 10,
+  "pageNumber": 0
+}
