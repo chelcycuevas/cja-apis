@@ -15,7 +15,7 @@ The Audit Log API allows you to retrieve a list of audit log records using a GET
 
 The GET endpoint is designed for use when few or no filters are needed. If filters are included by adding query string parameters, each query string parameter will filter the list of audit logs using an 'AND' condition.
 
-`GET https://cja.adobe.io/auditlogs`
+`GET https://cja.adobe.io/auditlogs/api/v1/auditlogs`
 
 Hitting this endpoint with no query string parameters will return the last 1000 audit log records in descending order. To filter the audit log records, please reference the list of available query string parameters.
 
@@ -38,7 +38,7 @@ Hitting this endpoint with no query string parameters will return the last 1000 
 ### Example : Get audit logs with no filters
 
 Request:
-`GET https://cja.adobe.io/auditlogs`
+`GET https://cja.adobe.io/auditlogs/api/v1/auditlogs`
 
 Response:
 
@@ -115,7 +115,7 @@ Response:
 Request:
 
 ```
-?startDate=2021-08-01T00%3A00%3A00-07&endDate=2021-09-30T00%3A00%3A00-07&action=CREATE&action=EDIT&action=DELETE&component=SCHEDULED_PROJECT&userType=IMS&description=job&pageSize=2
+https://cja.adobe.io/auditlogs/api/v1/auditlogs?startDate=2021-08-01T00%3A00%3A00-07&endDate=2021-09-30T00%3A00%3A00-07&action=CREATE&action=EDIT&action=DELETE&component=SCHEDULED_PROJECT&userType=IMS&description=job&pageSize=2
 ```
 Response:
 ```
@@ -190,6 +190,8 @@ Response:
 
 If you need to retrieve a list of audit logs using 'OR' criteria, you will want to utilize the POST /auditlogs/search endpoint. These lists can be used as a guide for the available ENUM values for the associated key.
 
+`POST https://cja.adobe.io/auditlogs/api/v1/auditlogs/search`
+
 
 ### fieldType
   * COMPONENT
@@ -220,9 +222,6 @@ _If 'BEGIN_DATE_RANGE' is set as a fieldType, 'END_DATE_RANGE' must also be set.
 
 
 ## POST Example 1
-
-`POST https://cja.adobe.io/auditlogs/search`
-
 
 #### Show me audit logs where the component is 'FILTER' or 'CALCULATED_METRIC', the 'DESCRIPTION' contains the string 'created', AND the 'USER_EMAIL' contains EITHER 'jane' or 'john'.
 
